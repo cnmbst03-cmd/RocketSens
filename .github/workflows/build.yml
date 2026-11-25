@@ -5,11 +5,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare images
+      - name: Setup files and images
         run: |
           mkdir -p app/src/main/res/drawable
           cp retouch_2026110920375676.png app/src/main/res/drawable/app_icon.png
           cp IMG_1a166080* app/src/main/res/drawable/app_bg.png
+          cat << 'EOF' > app/src/main/AndroidManifest.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://android.com">
+              <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+              <application
+                  android:allowBackup="true"
+                  android:icon="@drawable/app_icon"
+                  android:roundIcon="@drawable/app_icon"
+                  android:label="Rocket Sens"
+                  android:theme="@android:style/Theme.Material.NoActionBar">
+                  <activity android:name=".MainActivity" android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
